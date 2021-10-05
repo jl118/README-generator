@@ -1,6 +1,9 @@
-// external packages needed for this application
+// external packages and dependencies needed for this application
 const inquirer = require('inquirer');
 const fs = require('fs');
+const util = require('util');
+const generateMarkdown = require('./utils/generateMarkdown.js');
+const api = require('./utils/api.js');
 
 // array of questions for user input
 const promptUser = () => {
@@ -9,11 +12,34 @@ const promptUser = () => {
             type: 'input',
             message: 'What is the title of your project?',
             name: 'projectTitle',
+            validate: function(answer) {
+                if (answer.length < 1) {
+                    return console.log("The title of your project is required.");
+                }
+                return true;
+            }
+        },
+        {
+            type: 'input',
+            message: 'What is the name of this GitHub repo?',
+            name: 'repo',
+            validate: function(answer) {
+                if (answer.length < 1) {
+                    return console.log("A valid repo name is required for a badge.");
+                }
+                return true;
+            }
         },
         {
             type: 'input',
             message: 'Write a brief description explaining the what, why, and how of your project.',
             name: 'description',
+            validate: function(answer) {
+                if (answer.length < 1) {
+                    return console.log("A description of your project is required.");
+                }
+                return true;
+            }
         },
         {
             type: 'input',
@@ -24,6 +50,12 @@ const promptUser = () => {
             type: 'input',
             message: 'Please provide examples and instructions for use:',
             name: 'usage',
+            validate: function(answer) {
+                if (answer.length < 1) {
+                    return console.log("Instructions for use are required.");
+                }
+                return true;
+            }
         },
         {
             type: 'list',
@@ -58,11 +90,42 @@ const promptUser = () => {
     ]);
 };
 
-// TODO: Create a function to write README file
-function writeToFile(fileName, data) {}
+// writes README file
+function writeToFile(fileName, data) {
+    fs.writeFile(fileName, data, err => {
+        if(err) {
+            return console.log(err);
+        } else {
+            console.log("Success! Your README.md file has been generated.")
+        }
+    });
+}
 
-// TODO: Create a function to initialize app
-function init() {}
+// async variable
+const writeFileAsync = util.promisify(writeToFile);
+
+// function to initialize app
+async function init() {
+    try {
+        // user questions
+        const userResponses = await promptUser();
+        console.log("Your responses: ", userResponses);
+        console.log("Fetching GitHub data...");
+
+        // call GitHub api for user information
+        const userInfo = await api.getUserInfo(userResponses);
+        console.log("Your GitHub info: ", userInfo);
+
+        // pass userResponses and GitHub info to generateMarkdown
+        console.log("Generating your README.md file...");
+        const markdown = generateMarkdown(userResponses, userInfo);
+
+        // write markdown to file
+        await writeFileAsync('README.md', markdown);
+    } catch (error) {
+        console.log(error);
+    }
+};
 
 // Function call to initialize app
 init();

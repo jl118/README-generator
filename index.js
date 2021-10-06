@@ -79,6 +79,11 @@ const promptUser = () => {
         },
         {
             type: 'input',
+            message: 'If there are available commands to run tests for this application, enter them below:',
+            name: 'tests',
+        },
+        {
+            type: 'input',
             message: 'Please enter your GitHub username:',
             name: 'username',
         },
@@ -108,17 +113,17 @@ const writeFileAsync = util.promisify(writeToFile);
 async function init() {
     try {
         // user questions
-        const userResponses = await promptUser();
-        console.log("Your responses: ", userResponses);
+        const userResponse = await promptUser();
+        console.log("Your responses: ", userResponse);
         console.log("Fetching GitHub data...");
 
         // call GitHub api for user information
-        const userInfo = await api.getUserInfo(userResponses);
+        const userInfo = await api.getUserInfo(userResponse);
         console.log("Your GitHub info: ", userInfo);
 
         // pass userResponses and GitHub info to generateMarkdown
         console.log("Generating your README.md file...");
-        const markdown = generateMarkdown(userResponses, userInfo);
+        const markdown = generateMarkdown(userResponse, userInfo);
 
         // write markdown to file
         await writeFileAsync('README.md', markdown);

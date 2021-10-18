@@ -1,16 +1,33 @@
-// TODO: Create a function that returns a license badge based on which license is passed in
-// If there is no license, return an empty string
-function renderLicenseBadge(license) {}
+// function that returns a license badge based on which license is passed in
+function renderLicenseBadge(license) {
+  switch (license) {
+    case 'Apache':
+      return `[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)`
+      break;
+    case 'BSD':
+      return `[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)`
+      break;
+    case 'GPL':
+      return `[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)`
+      break;
+    case 'GNU':
+      return `[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)`
+      break;
+    case 'MIT':
+      return `[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)`
+      break;
+    case 'Mozilla':
+      return `[![License: MPL 2.0](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)`
+      break;
+    case 'Open':
+      return `[![License: ODbL](https://img.shields.io/badge/License-ODbL-brightgreen.svg)](https://opendatacommons.org/licenses/odbl/)`
+      break;
+    default:
+      return '';
+  }
+};
 
-// TODO: Create a function that returns the license link
-// If there is no license, return an empty string
-function renderLicenseLink(license) {}
-
-// TODO: Create a function that returns the license section of README
-// If there is no license, return an empty string
-function renderLicenseSection(license) {}
-
-// TODO: Create a function to generate markdown for README
+// function to generate markdown for README
 function generateMarkdown(userResponse, userInfo) {
   // generate table of contents based on userResponse
   let draftTable = `## Table of Contents`;
@@ -40,6 +57,8 @@ function generateMarkdown(userResponse, userInfo) {
   ![Badge for GitHub repo top language](https://img.shields.io/github/languages/top/${userResponse.username}/${userResponse.repo}?style=flat&logo=appveyor) ![Badge for GitHub last commit](https://img.shields.io/github/last-commit/${userResponse.username}/${userResponse.repo}?style=flat&logo=appveyor)
   
   Check out the badges hosted by [shields.io](https://shields.io/).
+
+  ${renderLicenseBadge(userResponse.license)}
   
   
   ## Description 
@@ -114,9 +133,7 @@ function generateMarkdown(userResponse, userInfo) {
   
   ## Questions?
   
-  ![Developer Profile Picture](${userInfo.avatar_url}) 
-  
-  For any questions, please contact me here:
+  If you have any questions or would like to contribute, please contact me here:
  
   GitHub: [@${userInfo.login}](${userInfo.url})
   `;
@@ -132,7 +149,6 @@ function generateMarkdown(userResponse, userInfo) {
 
   // return markdown
   return draftMarkdown;
-
 
 }
 

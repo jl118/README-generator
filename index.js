@@ -62,7 +62,6 @@ const promptUser = () => {
             message: 'Which license does this project fall under?',
             choices: [
                 'Apache',
-                'Academic',
                 'BSD',
                 'GPL',
                 'GNU',
